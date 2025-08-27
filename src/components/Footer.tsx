@@ -28,7 +28,7 @@ const Footer = () => {
             <h4 className="font-display text-lg font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2">
               <li>
-                <a href="#home" className="text-primary-foreground/80 hover:text-accent transition-colors">
+                <a href="/" className="text-primary-foreground/80 hover:text-accent transition-colors">
                   Homepage
                 </a>
               </li>
