@@ -58,7 +58,7 @@ const FeaturedBooks = () => {
         {/* Section Header */}
         <div className="text-center mb-12">
           <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Featured <span className="text-gradient">Collection</span>
+            All <span className="text-gradient">Products</span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             Discover our handpicked selection of exceptional African literature, 
