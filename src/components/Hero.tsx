@@ -56,7 +56,7 @@ const Hero = () => {
           </div>
 
           {/* Stats */}
-          <div className="mt-12 pt-8">
+          <div className="mt-12 pt-8 pb-16">
             <div className="flex flex-wrap gap-8 rounded-xl bg-white/5 backdrop-blur-sm ring-1 ring-white/10 p-4 md:p-6">
               <div className="text-center min-w-[9rem]">
                 <div className="text-3xl font-bold text-accent">500+</div>

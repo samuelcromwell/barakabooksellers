@@ -8,18 +8,18 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand */}
           <div>
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
-                <BookOpen className="h-6 w-6 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-display text-xl font-bold">Baraka Booksellers</h3>
-                <p className="text-primary-foreground/80 text-sm">Celebrating African Literature</p>
-              </div>
+            <div className="w-128 h-16">
+              <img
+                src="https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=768,fit=crop,q=95/A0xwa3nL22teM7ow/bb-logo-final-web-m5KLL26WO7t0vrD5.png"
+                alt="Loresho Digital Centre Logo"
+                className="w-full h-full object-cover"
+              />
             </div>
+            <br></br>
+            <h2>Loresho Digital Centre</h2>
+            <br></br>
             <p className="text-primary-foreground/80 mb-4">
-              Your premier destination for authentic African literature, 
-              connecting readers with the rich storytelling traditions of the continent.
+              LDC empowers the generation of tomorrow for a brighter future and hope for every individual.
             </p>
           </div>
 
@@ -92,7 +92,7 @@ const Footer = () => {
               <div className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-accent" />
                 <div>
-                  <p className="text-primary-foreground/80">info@barakabooksellers.co.ke</p>
+                  <p className="text-primary-foreground/80">info@ldckenya.com</p>
                 </div>
               </div>
               
@@ -104,23 +104,16 @@ const Footer = () => {
                 </div>
               </div>
             </div>
-
-            <Button 
-              variant="secondary" 
-              className="mt-4 w-full bg-accent text-primary hover:bg-accent/90"
-            >
-              Contact for Delivery
-            </Button>
           </div>
         </div>
 
         {/* Bottom Bar */}
         <div className="border-t border-primary-foreground/20 mt-8 pt-8 text-center">
           <p className="text-primary-foreground/80">
-            © 2024 Baraka Booksellers. Powered by Loresho Digital Centre. All rights reserved.
+            © {new Date().getFullYear()} Loresho Digital Centre. All rights reserved.
           </p>
           <p className="text-primary-foreground/70 text-sm mt-2">
-            Celebrating African voices, one book at a time.
+            Empowering the generation of tomorrow for a brighter future.
           </p>
         </div>
       </div>

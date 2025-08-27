@@ -1,7 +1,6 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import FeaturedBooks from "@/components/FeaturedBooks";
-import Categories from "@/components/Categories";
 import Footer from "@/components/Footer";
 
 const Index = () => {
@@ -11,7 +10,6 @@ const Index = () => {
       <main>
         <Hero />
         <FeaturedBooks />
-        <Categories />
       </main>
       <Footer />
     </div>
