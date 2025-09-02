@@ -1,13 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { BookOpen, ArrowRight } from "lucide-react";
-import warriorHero from "@/assets/warrior-hero.png";
 
 const Hero = () => {
   return (
     <section className="relative isolate min-h-[70svh] md:min-h-[80vh] flex items-center overflow-hidden">
       {/* Background Image */}
       <img
-        src={warriorHero}
+        src="https://www.goethe.de/resources/files/apps/dlp_tlm/data/jpeg1/vbild-leseempfehlung-c-pexels-v1-formatkey-webp-w1920r.jpeg"
         alt="African Warrior - Celebrating African Literature"
         className="absolute inset-0 -z-10 h-full w-full object-cover object-[center_30%]"
       />
@@ -45,14 +44,6 @@ const Hero = () => {
               Browse Collection
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
-
-            {/* <Button
-              variant="outline"
-              size="lg"
-              className="text-lg px-8 py-4 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm"
-            >
-              Featured Authors
-            </Button> */}
           </div>
 
           {/* Stats */}
