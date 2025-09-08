@@ -22,7 +22,7 @@ const Hero = () => {
       {/* Content */}
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-3xl text-white">
-          <div className="flex items-center space-x-2 mb-6">
+          <div className="flex items-center space-x-2 mb-6 mt-6">
             <BookOpen className="h-6 w-6 text-accent" />
             <span className="text-accent font-medium tracking-wide uppercase text-sm">
               African Literature Collection
