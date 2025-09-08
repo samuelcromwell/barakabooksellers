@@ -40,10 +40,10 @@ const Hero = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button size="lg" className="btn-hero group text-lg px-8 py-4 ring-1 ring-white/10">
+            {/* <Button size="lg" className="btn-hero group text-lg px-8 py-4 ring-1 ring-white/10">
               Browse Collection
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
+            </Button> */}
           </div>
 
           {/* Stats */}
