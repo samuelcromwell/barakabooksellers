@@ -2,14 +2,23 @@ import { useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { books } from "@/data/books.ts";
+import { books, normalizeSlug, slugify } from "@/data/books";
 import { Button } from "@/components/ui/button";
 import { Star, ArrowLeft, ShoppingBag } from "lucide-react";
 
 const BookDetails = () => {
-  const { id } = useParams<{ id: string }>();
+  const { slug = "" } = useParams<{ slug: string }>();
 
-  const book = useMemo(() => books.find((b) => b.id === id), [id]);
+  const book = useMemo(() => {
+    const wanted = normalizeSlug(slug);
+    // primary: match explicit slug
+    let found = books.find((b) => normalizeSlug(b.slug) === wanted);
+    // fallback: derive from title if slug missing/mistyped
+    if (!found) {
+      found = books.find((b) => slugify(b.title) === wanted);
+    }
+    return found || null;
+  }, [slug]);
 
   if (!book) {
     return (
@@ -37,25 +46,15 @@ const BookDetails = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-
       <main>
         <section className="container mx-auto px-4 py-10 md:py-16">
           <div className="grid gap-10 md:grid-cols-2">
-            {/* Image */}
             <div className="border border-border rounded-xl overflow-hidden">
-              <img
-                src={book.image}
-                alt={book.title}
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
+              <img src={book.image} alt={book.title} className="w-full h-full object-cover" loading="lazy" />
             </div>
 
-            {/* Info */}
             <div>
-              <h1 className="text-3xl md:text-5xl font-extrabold leading-tight tracking-tight">
-                {book.title}
-              </h1>
+              <h1 className="text-3xl md:text-5xl font-extrabold leading-tight tracking-tight">{book.title}</h1>
               <p className="mt-2 text-lg text-muted-foreground">
                 A {book.category} title by <span className="font-medium">{book.author}</span>
               </p>
@@ -65,18 +64,14 @@ const BookDetails = () => {
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star
                       key={i}
-                      className={`h-4 w-4 ${
-                        i < Math.round(book.rating) ? "fill-yellow-400 stroke-yellow-400" : "stroke-muted-foreground"
-                      }`}
+                      className={`h-4 w-4 ${i < Math.round(book.rating) ? "fill-yellow-400 stroke-yellow-400" : "stroke-muted-foreground"}`}
                     />
                   ))}
                 </div>
                 <span className="text-sm text-muted-foreground">{book.rating.toFixed(1)} / 5</span>
               </div>
 
-              <div className="mt-6 text-xl font-semibold">
-                Ksh{book.price.toLocaleString("en-KE")}
-              </div>
+              <div className="mt-6 text-xl font-semibold">Ksh{book.price.toLocaleString("en-KE")}</div>
 
               <div className="mt-6">
                 <Button className="px-6">
@@ -91,17 +86,24 @@ const BookDetails = () => {
 
               <div className="mt-10">
                 <Button variant="outline" asChild>
-                  <Link to="/">
-                    <ArrowLeft className="h-4 w-4 mr-2" />
-                    Back to books
-                  </Link>
+                    <Link
+                        to="/#featured-books"
+                        onClick={() => {
+                        requestAnimationFrame(() => {
+                            const el = document.getElementById("featured-books");
+                            if (el) el.scrollIntoView({ behavior: "smooth" });
+                        });
+                        }}
+                    >
+                        <ArrowLeft className="h-4 w-4 mr-2" />
+                        Back to books
+                    </Link>
                 </Button>
               </div>
             </div>
           </div>
         </section>
       </main>
-
       <Footer />
     </div>
   );

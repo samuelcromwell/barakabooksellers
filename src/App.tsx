@@ -1,3 +1,4 @@
+// src/App.tsx
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -7,7 +8,7 @@ import Advertisers from "./pages/Advertisers";
 import Authors from "./pages/Authors";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import BookDetails from "./pages/BookDetails.tsx"; // <-- add
+import BookDetails from "./pages/BookDetails"; // no .tsx
 
 const queryClient = new QueryClient();
 
@@ -21,8 +22,9 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/authors" element={<Authors />} />
           <Route path="/advertisers" element={<Advertisers />} />
-          <Route path="/product/:id" element={<BookDetails />} /> {/* <-- add */}
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          {/* Slug route with no /product prefix */}
+          <Route path="/:slug" element={<BookDetails />} />
+          {/* Catch-all LAST */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

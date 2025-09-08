@@ -4,14 +4,14 @@ import { Link } from "react-router-dom";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import BookCard from "./BookCard";
-import { books } from "@/data/books"; // <-- use shared data
+import { books } from "@/data/books"; // uses books with { slug }
 
 const FeaturedBooks = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
     <>
-      <section className="py-16 bg-gradient-subtle">
+      <section id="featured-books" className="py-16 bg-gradient-subtle">
         <div className="container mx-auto px-4">
           {/* Section Header */}
           <div className="text-center mb-12">
@@ -47,7 +47,7 @@ const FeaturedBooks = () => {
               .map((book) => (
                 <Link
                   key={book.id}
-                  to={`/product/${book.id}`}
+                  to={`/${book.slug}`} // <-- slug-only path
                   className="block group focus:outline-none focus:ring-2 focus:ring-primary rounded-lg"
                 >
                   <BookCard {...book} />
