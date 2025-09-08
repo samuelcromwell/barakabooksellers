@@ -59,16 +59,16 @@ const Header = () => {
               <a href="/" className="text-foreground hover:text-primary transition-colors font-medium">
                 Homepage
               </a>
-              <a href="#authors" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="/authors" className="text-muted-foreground hover:text-primary transition-colors">
                 Authors
               </a>
-              <a href="#advertisers" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="/advertisers" className="text-muted-foreground hover:text-primary transition-colors">
                 Advertisers
               </a>
             </nav>
 
             {/* Logo */}
-            <div className="w-128 h-16 md:h-32">
+            <div className="w-128 h-16 md:h-36">
               <img
                 src="https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=375,fit=crop,q=95/A0xwa3nL22teM7ow/bbs-logo2-AGBz9NV4M8uQ808L.png"
                 alt="Baraka Booksellers Logo"
@@ -227,10 +227,10 @@ const Header = () => {
                 <a href="/" className="text-foreground hover:text-primary transition-colors font-medium">
                   Homepage
                 </a>
-                <a href="#authors" className="text-muted-foreground hover:text-primary transition-colors">
+                <a href="/authors" className="text-muted-foreground hover:text-primary transition-colors">
                   Authors
                 </a>
-                <a href="#advertisers" className="text-muted-foreground hover:text-primary transition-colors">
+                <a href="/advertisers" className="text-muted-foreground hover:text-primary transition-colors">
                   Advertisers
                 </a>
 

@@ -33,12 +33,12 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="#authors" className="text-primary-foreground/80 hover:text-accent transition-colors">
+                <a href="/authors" className="text-primary-foreground/80 hover:text-accent transition-colors">
                   Authors
                 </a>
               </li>
               <li>
-                <a href="#advertisers" className="text-primary-foreground/80 hover:text-accent transition-colors">
+                <a href="/advertisers" className="text-primary-foreground/80 hover:text-accent transition-colors">
                   Advertisers
                 </a>
               </li>
