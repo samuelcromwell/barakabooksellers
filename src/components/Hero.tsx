@@ -2,6 +2,12 @@ import { Button } from "@/components/ui/button";
 import { BookOpen, ArrowRight } from "lucide-react";
 
 const Hero = () => {
+  const scrollToFeatured = () => {
+    // Smoothly scroll to the Featured Books section on the same page
+    const el = document.getElementById("featured-books");
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <section className="relative isolate min-h-[70svh] md:min-h-[80vh] flex items-center overflow-hidden">
       {/* Background Image */}
@@ -40,10 +46,14 @@ const Hero = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">
-            {/* <Button size="lg" className="btn-hero group text-lg px-8 py-4 ring-1 ring-white/10">
+            <Button
+              size="lg"
+              className="btn-hero group text-lg px-8 py-4 ring-1 ring-white/10"
+              onClick={scrollToFeatured}
+            >
               Browse Collection
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </Button> */}
+            </Button>
           </div>
 
           {/* Stats */}
