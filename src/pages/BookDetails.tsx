@@ -1,5 +1,6 @@
+// src/pages/BookDetails.tsx
 import { useMemo } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { books, normalizeSlug, slugify } from "@/data/books";
@@ -8,6 +9,7 @@ import { Star, ArrowLeft, ShoppingBag } from "lucide-react";
 
 const BookDetails = () => {
   const { slug = "" } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
 
   const book = useMemo(() => {
     const wanted = normalizeSlug(slug);
@@ -50,13 +52,21 @@ const BookDetails = () => {
         <section className="container mx-auto px-4 py-10 md:py-16">
           <div className="grid gap-10 md:grid-cols-2">
             <div className="border border-border rounded-xl overflow-hidden">
-              <img src={book.image} alt={book.title} className="w-full h-full object-cover" loading="lazy" />
+              <img
+                src={book.image}
+                alt={book.title}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </div>
 
             <div>
-              <h1 className="text-3xl md:text-5xl font-extrabold leading-tight tracking-tight">{book.title}</h1>
+              <h1 className="text-3xl md:text-5xl font-extrabold leading-tight tracking-tight">
+                {book.title}
+              </h1>
               <p className="mt-2 text-lg text-muted-foreground">
-                A {book.category} title by <span className="font-medium">{book.author}</span>
+                A {book.category} title by{" "}
+                <span className="font-medium">{book.author}</span>
               </p>
 
               <div className="mt-4 flex items-center gap-3">
@@ -64,14 +74,22 @@ const BookDetails = () => {
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star
                       key={i}
-                      className={`h-4 w-4 ${i < Math.round(book.rating) ? "fill-yellow-400 stroke-yellow-400" : "stroke-muted-foreground"}`}
+                      className={`h-4 w-4 ${
+                        i < Math.round(book.rating)
+                          ? "fill-yellow-400 stroke-yellow-400"
+                          : "stroke-muted-foreground"
+                      }`}
                     />
                   ))}
                 </div>
-                <span className="text-sm text-muted-foreground">{book.rating.toFixed(1)} / 5</span>
+                <span className="text-sm text-muted-foreground">
+                  {book.rating.toFixed(1)} / 5
+                </span>
               </div>
 
-              <div className="mt-6 text-xl font-semibold">Ksh{book.price.toLocaleString("en-KE")}</div>
+              <div className="mt-6 text-xl font-semibold">
+                Ksh{book.price.toLocaleString("en-KE")}
+              </div>
 
               <div className="mt-6">
                 <Button className="px-6">
@@ -80,24 +98,27 @@ const BookDetails = () => {
                 </Button>
               </div>
 
+              {/* Spaced paragraphs for description */}
               <div className="mt-8 space-y-4 text-muted-foreground leading-relaxed">
-                <p>{book.description ?? "No description available yet."}</p>
+                {(book.description ?? "No description available yet.")
+                  .split(/\n{2,}/)
+                  .map((para, idx) => <p key={idx}>{para}</p>)}
               </div>
 
               <div className="mt-10">
-                <Button variant="outline" asChild>
-                    <Link
-                        to="/#featured-books"
-                        onClick={() => {
-                        requestAnimationFrame(() => {
-                            const el = document.getElementById("featured-books");
-                            if (el) el.scrollIntoView({ behavior: "smooth" });
-                        });
-                        }}
-                    >
-                        <ArrowLeft className="h-4 w-4 mr-2" />
-                        Back to books
-                    </Link>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    // Navigate home without hash in URL, then smooth-scroll to the section
+                    navigate("/");
+                    setTimeout(() => {
+                      const el = document.getElementById("featured-books");
+                      if (el) el.scrollIntoView({ behavior: "smooth" });
+                    }, 100);
+                  }}
+                >
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Go Back 
                 </Button>
               </div>
             </div>
