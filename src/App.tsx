@@ -7,6 +7,7 @@ import Advertisers from "./pages/Advertisers";
 import Authors from "./pages/Authors";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import BookDetails from "./pages/BookDetails.tsx"; // <-- add
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/authors" element={<Authors />} />
           <Route path="/advertisers" element={<Advertisers />} />
+          <Route path="/product/:id" element={<BookDetails />} /> {/* <-- add */}
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
