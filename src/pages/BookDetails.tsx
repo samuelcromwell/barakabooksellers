@@ -13,9 +13,7 @@ const BookDetails = () => {
 
   const book = useMemo(() => {
     const wanted = normalizeSlug(slug);
-    // primary: match explicit slug
     let found = books.find((b) => normalizeSlug(b.slug) === wanted);
-    // fallback: derive from title if slug missing/mistyped
     if (!found) {
       found = books.find((b) => slugify(b.title) === wanted);
     }
@@ -92,7 +90,23 @@ const BookDetails = () => {
               </div>
 
               <div className="mt-6">
-                <Button className="px-6">
+                <Button
+                  className="px-6"
+                  onClick={() => {
+                    // Dispatch a global "add to cart" event the Header listens to
+                    window.dispatchEvent(
+                      new CustomEvent("cart:add", {
+                        detail: {
+                          id: book.id,
+                          title: book.title,
+                          price: book.price,
+                          image: book.image,
+                          qty: 1,
+                        },
+                      })
+                    );
+                  }}
+                >
                   <ShoppingBag className="h-4 w-4 mr-2" />
                   Add to bag
                 </Button>
@@ -109,7 +123,6 @@ const BookDetails = () => {
                 <Button
                   variant="outline"
                   onClick={() => {
-                    // Navigate home without hash in URL, then smooth-scroll to the section
                     navigate("/");
                     setTimeout(() => {
                       const el = document.getElementById("featured-books");
@@ -118,7 +131,7 @@ const BookDetails = () => {
                   }}
                 >
                   <ArrowLeft className="h-4 w-4 mr-2" />
-                  Go Back 
+                  Go Back
                 </Button>
               </div>
             </div>

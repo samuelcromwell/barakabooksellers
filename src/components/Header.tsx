@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Search, Menu, X, Phone, ShoppingBag, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -25,8 +25,50 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Demo local cart state. Plug in your store/ctx when ready.
+  // Local cart state
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  // Control the sheet so BookDetails can open it programmatically
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  // Listen for "cart:add" events dispatched from anywhere (e.g., BookDetails)
+  useEffect(() => {
+    const onAdd = (e: Event) => {
+      const detail = (e as CustomEvent).detail as {
+        id: string;
+        title: string;
+        price: number;
+        image?: string;
+        qty?: number;
+      };
+      if (!detail?.id) return;
+
+      setCartItems((prev) => {
+        const idx = prev.findIndex((p) => p.id === detail.id);
+        if (idx === -1) {
+          return [
+            ...prev,
+            {
+              id: detail.id,
+              title: detail.title,
+              price: detail.price,
+              image: detail.image,
+              qty: detail.qty ?? 1,
+            },
+          ];
+        }
+        // increment quantity
+        const next = [...prev];
+        next[idx] = { ...next[idx], qty: next[idx].qty + (detail.qty ?? 1) };
+        return next;
+      });
+
+      // open the sheet
+      setIsCartOpen(true);
+    };
+
+    window.addEventListener("cart:add" as any, onAdd as any);
+    return () => window.removeEventListener("cart:add" as any, onAdd as any);
+  }, []);
 
   const totalQty = useMemo(
     () => cartItems.reduce((sum, it) => sum + it.qty, 0),
@@ -39,6 +81,18 @@ const Header = () => {
 
   const removeItem = (id: string) =>
     setCartItems((prev) => prev.filter((it) => it.id !== id));
+
+  const decQty = (id: string) =>
+    setCartItems((prev) =>
+      prev
+        .map((it) => (it.id === id ? { ...it, qty: Math.max(1, it.qty - 1) } : it))
+        .filter(Boolean) as CartItem[]
+    );
+
+  const incQty = (id: string) =>
+    setCartItems((prev) =>
+      prev.map((it) => (it.id === id ? { ...it, qty: it.qty + 1 } : it))
+    );
 
   return (
     <>
@@ -78,7 +132,7 @@ const Header = () => {
 
             {/* Shopping Bag (Cart) - hidden on mobile, visible desktop */}
             <div className="hidden md:flex items-center gap-2">
-              <Sheet>
+              <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
                 <SheetTrigger asChild>
                   <Button
                     variant="ghost"
@@ -100,82 +154,106 @@ const Header = () => {
                   </Button>
                 </SheetTrigger>
 
-                <SheetContent side="right" className="w-full sm:max-w-md">
-                  <SheetHeader>
-                    <SheetTitle className="flex items-center gap-2">
-                      <ShoppingBag className="h-5 w-5" />
-                      Shopping bag
-                    </SheetTitle>
-                  </SheetHeader>
+                <SheetContent side="right" className="w-full sm:max-w-md p-0 flex flex-col">
+                  <div className="px-7 pt-6 pb-2">
+                    <SheetHeader>
+                      <SheetTitle className="flex items-center gap-2 text-2xl">
+                        <ShoppingBag className="h-5 w-5" />
+                        Shopping bag
+                      </SheetTitle>
+                    </SheetHeader>
+                  </div>
 
                   {/* Empty state */}
                   {cartItems.length === 0 ? (
-                    <div className="h-full flex items-center justify-center">
+                    <div className="flex-1 flex items-center justify-center px-7">
                       <p className="text-lg font-semibold text-foreground">
                         Shopping bag is empty
                       </p>
                     </div>
                   ) : (
-                    <div className="flex h-full flex-col">
-                      <ScrollArea className="flex-1 pr-3">
-                        <div className="space-y-4 py-4">
+                    <>
+                      <ScrollArea className="flex-1 px-7">
+                        <div className="space-y-4 py-2">
                           {cartItems.map((item) => (
                             <div
                               key={item.id}
-                              className="flex items-center gap-3 rounded-lg border border-border p-3"
+                              className="rounded-xl border border-border p-3"
                             >
-                              <div className="h-14 w-14 flex-shrink-0 overflow-hidden rounded-md bg-muted">
-                                {item.image ? (
-                                  <img
-                                    src={item.image}
-                                    alt={item.title}
-                                    className="h-full w-full object-cover"
-                                  />
-                                ) : null}
+                              <div className="flex items-start gap-3">
+                                <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md bg-muted">
+                                  {item.image ? (
+                                    <img
+                                      src={item.image}
+                                      alt={item.title}
+                                      className="h-full w-full object-cover"
+                                    />
+                                  ) : null}
+                                </div>
+
+                                <div className="min-w-0 flex-1">
+                                  <div className="flex items-start justify-between gap-2">
+                                    <div>
+                                      <p className="truncate text-base font-semibold">
+                                        {item.title}
+                                      </p>
+                                      <p className="text-sm text-muted-foreground mt-1">
+                                        Ksh{item.price.toLocaleString("en-KE", { minimumFractionDigits: 2 })}
+                                      </p>
+                                    </div>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      onClick={() => removeItem(item.id)}
+                                      aria-label={`Remove ${item.title}`}
+                                    >
+                                      <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                  </div>
+
+                                  <div className="mt-3 flex items-center gap-3">
+                                    <span className="text-sm text-muted-foreground">Qty:</span>
+                                    <div className="flex items-center gap-2">
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => decQty(item.id)}
+                                        aria-label="Decrease quantity"
+                                      >
+                                        −
+                                      </Button>
+                                      <span className="px-2 text-sm font-medium">{item.qty}</span>
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => incQty(item.id)}
+                                        aria-label="Increase quantity"
+                                      >
+                                        +
+                                      </Button>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
-                              <div className="min-w-0 flex-1">
-                                <p className="truncate text-sm font-medium">
-                                  {item.title}
-                                </p>
-                                <p className="text-xs text-muted-foreground">
-                                  Qty: {item.qty}
-                                </p>
-                              </div>
-                              <div className="text-sm font-semibold">
-                                KES {(item.price * item.qty).toLocaleString()}
-                              </div>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => removeItem(item.id)}
-                                aria-label={`Remove ${item.title}`}
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
                             </div>
                           ))}
                         </div>
                       </ScrollArea>
 
-                      {/* Summary */}
-                      <div className="space-y-3 border-t border-border pt-4">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">Subtotal</span>
-                          <span className="font-semibold">
-                            KES {subtotal.toLocaleString()}
+                      {/* Summary footer */}
+                      <div className="border-t border-border mt-2 p-7">
+                        <div className="flex items-center justify-between text-base font-semibold mb-4">
+                          <span>Subtotal:</span>
+                          <span>
+                            Ksh{subtotal.toLocaleString("en-KE", { minimumFractionDigits: 2 })}
                           </span>
                         </div>
-
-                        <div className="grid grid-cols-2 gap-2">
-                          <SheetClose asChild>
-                            <Button variant="outline" className="w-full">
-                              Continue shopping
-                            </Button>
-                          </SheetClose>
-                          <Button className="w-full">Checkout</Button>
-                        </div>
+                        <Button className="w-full h-11">Checkout</Button>
+                        <p className="mt-2 text-xs text-muted-foreground text-center">
+                          🔒 Secure checkout
+                        </p>
                       </div>
-                    </div>
+                    </>
                   )}
                 </SheetContent>
               </Sheet>
@@ -204,22 +282,6 @@ const Header = () => {
             </Button>
           </div>
 
-          {/* Mobile Search */}
-          {/* REMOVED per instruction: Mobile search input should not appear anymore.
-          <div className="lg:hidden mt-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input
-                type="text"
-                placeholder="Search for a book..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-muted/30 border-border focus:border-primary w-full"
-              />
-            </div>
-          </div>
-          */}
-
           {/* Mobile Navigation */}
           {isMenuOpen && (
             <nav className="md:hidden mt-4 pb-4 border-t border-border pt-4">
@@ -234,8 +296,8 @@ const Header = () => {
                   Advertisers
                 </a>
 
-                {/* Shopping bag inside the mobile dropdown */}
-                <Sheet>
+                {/* Shopping bag in mobile dropdown */}
+                <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
                   <SheetTrigger asChild>
                     <button
                       className="flex items-center justify-between rounded-md border border-border px-3 py-2 text-left"
@@ -245,7 +307,6 @@ const Header = () => {
                         <ShoppingBag className="h-5 w-5" />
                         <span className="font-medium">Shopping bag</span>
                       </span>
-                      {/* Badge */}
                       <span
                         className="inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-primary px-1.5 text-[10px] font-semibold leading-none text-primary-foreground"
                         aria-hidden={totalQty === 0}
@@ -256,80 +317,96 @@ const Header = () => {
                     </button>
                   </SheetTrigger>
 
-                  <SheetContent side="right" className="w-full sm:max-w-md">
-                    <SheetHeader>
-                      <SheetTitle className="flex items-center gap-2">
-                        <ShoppingBag className="h-5 w-5" />
-                        Shopping bag
-                      </SheetTitle>
-                    </SheetHeader>
+                  <SheetContent side="right" className="w-full sm:max-w-md p-0 flex flex-col">
+                    <div className="px-7 pt-6 pb-2">
+                      <SheetHeader>
+                        <SheetTitle className="flex items-center gap-2 text-2xl">
+                          <ShoppingBag className="h-5 w-5" />
+                          Shopping bag
+                        </SheetTitle>
+                      </SheetHeader>
+                    </div>
 
                     {cartItems.length === 0 ? (
-                      <div className="h-full flex items-center justify-center">
+                      <div className="flex-1 flex items-center justify-center px-7">
                         <p className="text-lg font-semibold text-foreground">
                           Shopping bag is empty
                         </p>
                       </div>
                     ) : (
-                      <div className="flex h-full flex-col">
-                        <ScrollArea className="flex-1 pr-3">
-                          <div className="space-y-4 py-4">
+                      <>
+                        <ScrollArea className="flex-1 px-7">
+                          <div className="space-y-4 py-2">
                             {cartItems.map((item) => (
-                              <div
-                                key={item.id}
-                                className="flex items-center gap-3 rounded-lg border border-border p-3"
-                              >
-                                <div className="h-14 w-14 flex-shrink-0 overflow-hidden rounded-md bg-muted">
-                                  {item.image ? (
-                                    <img
-                                      src={item.image}
-                                      alt={item.title}
-                                      className="h-full w-full object-cover"
-                                    />
-                                  ) : null}
+                              <div key={item.id} className="rounded-xl border border-border p-3">
+                                <div className="flex items-start gap-3">
+                                  <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md bg-muted">
+                                    {item.image ? (
+                                      <img
+                                        src={item.image}
+                                        alt={item.title}
+                                        className="h-full w-full object-cover"
+                                      />
+                                    ) : null}
+                                  </div>
+
+                                  <div className="min-w-0 flex-1">
+                                    <div className="flex items-start justify-between gap-2">
+                                      <div>
+                                        <p className="truncate text-base font-semibold">
+                                          {item.title}
+                                        </p>
+                                        <p className="text-sm text-muted-foreground mt-1">
+                                          Ksh{item.price.toLocaleString("en-KE", { minimumFractionDigits: 2 })}
+                                        </p>
+                                      </div>
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => removeItem(item.id)}
+                                        aria-label={`Remove ${item.title}`}
+                                      >
+                                        <Trash2 className="h-4 w-4" />
+                                      </Button>
+                                    </div>
+
+                                    <div className="mt-3 flex items-center gap-3">
+                                      <span className="text-sm text-muted-foreground">Qty:</span>
+                                      <div className="flex items-center gap-2">
+                                        <Button variant="outline" size="sm" onClick={() => decQty(item.id)}>
+                                          −
+                                        </Button>
+                                        <span className="px-2 text-sm font-medium">{item.qty}</span>
+                                        <Button variant="outline" size="sm" onClick={() => incQty(item.id)}>
+                                          +
+                                        </Button>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
-                                <div className="min-w-0 flex-1">
-                                  <p className="truncate text-sm font-medium">
-                                    {item.title}
-                                  </p>
-                                  <p className="text-xs text-muted-foreground">
-                                    Qty: {item.qty}
-                                  </p>
-                                </div>
-                                <div className="text-sm font-semibold">
-                                  KES {(item.price * item.qty).toLocaleString()}
-                                </div>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  onClick={() => removeItem(item.id)}
-                                  aria-label={`Remove ${item.title}`}
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
                               </div>
                             ))}
                           </div>
                         </ScrollArea>
 
-                        <div className="space-y-3 border-t border-border pt-4">
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-muted-foreground">Subtotal</span>
-                            <span className="font-semibold">
-                              KES {subtotal.toLocaleString()}
+                        <div className="border-t border-border mt-2 p-7">
+                          <div className="flex items-center justify-between text-base font-semibold mb-4">
+                            <span>Subtotal:</span>
+                            <span>
+                              Ksh{subtotal.toLocaleString("en-KE", { minimumFractionDigits: 2 })}
                             </span>
                           </div>
-
-                          <div className="grid grid-cols-2 gap-2">
-                            <SheetClose asChild>
-                              <Button variant="outline" className="w-full">
-                                Continue shopping
-                              </Button>
-                            </SheetClose>
-                            <Button className="w-full">Checkout</Button>
-                          </div>
+                          <SheetClose asChild>
+                            <Button variant="outline" className="w-full h-11">
+                              Continue shopping
+                            </Button>
+                          </SheetClose>
+                          <Button className="w-full h-11 mt-2">Checkout</Button>
+                          <p className="mt-2 text-xs text-muted-foreground text-center">
+                            🔒 Secure checkout
+                          </p>
                         </div>
-                      </div>
+                      </>
                     )}
                   </SheetContent>
                 </Sheet>
