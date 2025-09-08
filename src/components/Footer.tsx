@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <footer className="bg-primary text-primary-foreground">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-64">
           {/* Brand */}
           <div>
             <div className="w-128 h-16">
@@ -42,38 +42,6 @@ const Footer = () => {
                   Advertisers
                 </a>
               </li>
-              <li>
-                <a href="#about" className="text-primary-foreground/80 hover:text-accent transition-colors">
-                  About Us
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Categories */}
-          <div>
-            <h4 className="font-display text-lg font-semibold mb-4">Popular Categories</h4>
-            <ul className="space-y-2">
-              <li>
-                <a href="#fiction" className="text-primary-foreground/80 hover:text-accent transition-colors">
-                  Historical Fiction
-                </a>
-              </li>
-              <li>
-                <a href="#contemporary" className="text-primary-foreground/80 hover:text-accent transition-colors">
-                  Contemporary
-                </a>
-              </li>
-              <li>
-                <a href="#romance" className="text-primary-foreground/80 hover:text-accent transition-colors">
-                  Romance & Drama
-                </a>
-              </li>
-              <li>
-                <a href="#biography" className="text-primary-foreground/80 hover:text-accent transition-colors">
-                  Biography & Memoir
-                </a>
-              </li>
             </ul>
           </div>
 
@@ -84,8 +52,7 @@ const Footer = () => {
               <div className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 text-accent" />
                 <div>
-                  <p className="font-medium">Judy - Delivery Coordinator</p>
-                  <p className="text-primary-foreground/80">07223334456</p>
+                  <p className="text-primary-foreground/80">0721 624 525</p>
                 </div>
               </div>
               
@@ -93,6 +60,7 @@ const Footer = () => {
                 <Mail className="h-5 w-5 text-accent" />
                 <div>
                   <p className="text-primary-foreground/80">info@ldckenya.com</p>
+                  <p className="text-primary-foreground/80">P.O Box 1576 -00606</p>
                 </div>
               </div>
               
