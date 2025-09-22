@@ -1,3 +1,4 @@
+// src/components/Hero.tsx
 import { Button } from "@/components/ui/button";
 import { BookOpen, ArrowRight } from "lucide-react";
 
@@ -41,8 +42,9 @@ const Hero = () => {
           </h1>
 
           <p className="text-xl md:text-2xl mb-8 text-white/90 leading-relaxed max-w-2xl drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)]">
-            From timeless classics to contemporary masterpieces, explore the rich tapestry
-            of African storytelling that has shaped literature worldwide.
+            From timeless classics to contemporary masterpieces, explore the
+            rich tapestry of African storytelling that has shaped literature
+            worldwide.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">
